@@ -368,7 +368,6 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     validate(injector.instance[im.Map[K, V]], expected: _*)
     validate(injector.instance[im.Map[K, Provider[V]]].mapValues(_.get), expected: _*)
-    validate(injector.instance[im.Map[K, javax.inject.Provider[V]]].mapValues(_.get), expected: _*)
   }
 
   private def validateWithAnnotation[K: Manifest, V: Manifest](module: Module, annotation: Annotation, expected: (K, V)*): Unit = {
@@ -376,7 +375,6 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     validate(injector.instance[im.Map[K, V]](annotation), expected: _*)
     validate(injector.instance[im.Map[K, Provider[V]]](annotation).mapValues(_.get), expected: _*)
-    validate(injector.instance[im.Map[K, javax.inject.Provider[V]]](annotation).mapValues(_.get), expected: _*)
   }
 
   private def validateWithAnn[K: Manifest, V: Manifest, Ann <: Annotation : Manifest](module: Module, expected: (K, V)*): Unit = {
@@ -384,7 +382,6 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     validate(injector.instance[im.Map[K, V], Ann], expected: _*)
     validate(injector.instance[im.Map[K, Provider[V]], Ann].mapValues(_.get), expected: _*)
-    validate(injector.instance[im.Map[K, javax.inject.Provider[V]], Ann].mapValues(_.get), expected: _*)
   }
 
   private def validateMultiMap[K: Manifest, V: Manifest](module: Module, expected: (K, im.Set[V])*): Unit = {
