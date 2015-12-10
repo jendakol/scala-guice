@@ -1,12 +1,10 @@
-Scala extensions for Google Guice 4.0
+Scala extensions for Google Guice 3.0
 =====================================
 
 **Master:** [![Build Status](https://travis-ci.org/codingwell/scala-guice.png?branch=master)](https://travis-ci.org/codingwell/scala-guice)
 **Develop:** [![Build Status](https://travis-ci.org/codingwell/scala-guice.png?branch=develop)](https://travis-ci.org/codingwell/scala-guice)
 
 Please submit pull requests against the **develop** branch.
-
-**Note: Multibinding behaviour had changed in beta4, duplicates are now ignored instead of throwing an exception.**
 
 Getting Started
 ---------------
@@ -19,18 +17,18 @@ We currently support Scala `2.10, 2.11`
 <dependency>
     <groupId>net.codingwell</groupId>
     <artifactId>scala-guice_2.10</artifactId>
-    <version>4.0.1</version>
+    <version>3.0.3</version>
 </dependency>
 ```
 
 #####sbt:
 ```scala
-"net.codingwell" %% "scala-guice" % "4.0.1"
+"net.codingwell" %% "scala-guice" % "3.0.3"
 ```
 
 ##### gradle:
 ```groovy
-'net.codingwell:scala-guice_2.10:4.0.1'
+'net.codingwell:scala-guice_2.10:3.0.3'
 ```
 
 ### Mixin
@@ -139,37 +137,6 @@ class AThing @Inject() (@Annotation configs: immutable.Set[A]) { ... }
 class Service @Inject() (@Names.named("backend") configs: immutable.Set[ServiceConfiguration]) { ... }
 ```
 
-### OptionBinding
-
-Newly available in Guice 4.0-beta5, we've got some support for OptionalBinder.
-
-```scala
-class MyModule extends AbstractModule with ScalaModule {
-  def configure {
-    val optBinder = ScalaOptionBinder.newOptionBinder[String](binder)
-    optBinder.setDefault.toInstance("A")
-    // To override the default binding (likely in another module):
-    optBinder.setBinding.toInstance("B")
-
-    val annotatedOptBinder = ScalaOptionBinder.newOptionBinder[A, Annotation](binder)
-    annotatedOptBinder.setDefault.to[A]
-
-    val namedOptBinder = ScalaOptionBinder.newOptionBinder[ServiceConfiguration](binder, Names.named("backend"))
-    namedOptBinder.setBinding.toInstance(config.getAdminServiceConfiguration)
-  }
-}
-```
-
-And then they may be retrieved as `Option[T]`, `Option[Provider[T]]`, and `Option[javax.inject.Provider[T]]`. (examples in order)
-
-```scala
-class StringThing @Inject() (name: Option[String]) { ... }
-
-class AThing @Inject() (@Annotation aProvider: Option[Provider[T]]) { ... }
-
-class Service @Inject() (@Names.named("backend") configProvider: Option[javax.inject.Provider[ServiceConfiguration]]) { ... }
-```
-
 ### MapBinding
 
 The ScalaMapBinder adds scala style mapbindings:
@@ -186,7 +153,6 @@ class MyModule extends AbstractModule with ScalaModule {
 And then may be retrieved as any of the following:
 - `immutable.Map[K, V]`
 - `immutable.Map[K, Provider[V]]`
-- `immutable.Map[K, javax.inject.Provider[V]]`
 
 If you call `mapBinder.permitDuplicates()` on the binder then you may also inject:
 - `immutable.Map[K, immutable.Set[V]]`

@@ -16,7 +16,7 @@
 package net.codingwell.scalaguice
 
 import com.google.inject.name.{Named, Names}
-import com.google.inject.{AbstractModule, Guice}
+import com.google.inject.{AbstractModule, Guice, ProvisionException}
 import net.codingwell.scalaguice.InjectorExtensions._
 import org.scalatest.{Matchers, WordSpec}
 
@@ -103,7 +103,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
       validate(Guice.createInjector(module).instance[im.Set[String], Named], "A", "B")
     }
 
-    "deduplicate" in {
+    "not permit duplicates" in {
       val module = new AbstractModule with ScalaModule {
         def configure() = {
           val multi = ScalaMultibinder.newSetBinder(binder, typeLiteral[Symbol])
@@ -111,7 +111,9 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
           multi.addBinding.toInstance('A)
         }
       }
-      validate(Guice.createInjector(module).instance[im.Set[Symbol]], 'A)
+      intercept[ProvisionException] {
+        val set = Guice.createInjector(module).instance[im.Set[Symbol]]
+      }
     }
 
     "permit duplicates" in {
