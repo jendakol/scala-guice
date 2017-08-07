@@ -24,13 +24,16 @@ libraryDependencies += "com.google.code.findbugs" % "jsr305" % "3.0.1" % "compil
 
 autoAPIMappings := true
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.11.11"
 
-crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0")
+crossScalaVersions := Seq("2.11.11", "2.12.3")
 
 testListeners <<= target.map(t => Seq(new eu.henkelmann.sbt.JUnitXmlTestsListener(t.getAbsolutePath)))
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-feature")
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
+libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
 publishTo <<= version { (v: String) =>
   val nexus = "https://oss.sonatype.org/"
