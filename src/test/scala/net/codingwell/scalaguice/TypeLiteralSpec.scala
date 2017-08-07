@@ -15,7 +15,9 @@
  */
 package net.codingwell.scalaguice
 
-import org.scalatest.{Matchers, FunSpec}
+import org.scalatest.{FunSpec, Matchers}
+
+import scala.language.experimental.macros
 
 class TypeLiteralSpec extends FunSpec with Matchers {
 
@@ -49,6 +51,14 @@ class TypeLiteralSpec extends FunSpec with Matchers {
 
     it("should handle type parameters that are arrays") {
       typeLiteral[Array[Int]] should equal (new TypeLiteral[Array[Int]] {})
+    }
+
+    it("should handle Unit type") {
+      typeLiteral[Unit => String] should equal(new TypeLiteral[Unit => String]() {})
+    }
+
+    it("should handle by-name parameter") {
+      typeLiteral[(=> Unit) => String] should equal(new TypeLiteral[(=> Unit) => String]() {})
     }
   }
 }

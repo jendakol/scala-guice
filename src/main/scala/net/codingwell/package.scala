@@ -22,10 +22,14 @@ import com.google.inject.internal.Annotations
 import com.google.inject.util.Types
 import com.google.inject.{Key, TypeLiteral}
 
+import scala.language.experimental.macros
 import scala.language.higherKinds
 import scala.reflect.ClassTag
 
 package object scalaguice {
+
+  implicit def manifestForAnything[T]: Manifest[T] = macro Macros.defineManifest[T]
+
   /**
    * Create a com.google.inject.TypeLiteral from a [[scala.reflect.Manifest]].
    * Subtypes of [[scala.AnyVal]] will be converted to their corresponding
